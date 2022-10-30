@@ -1,0 +1,42 @@
+/* 1293. Shortest Path in a Grid with Obstacles Elimination
+   Link : https://leetcode.com/problems/shortest-path-in-a-grid-with-obstacles-elimination/description/
+*/
+class Solution {
+public:
+    int shortestPath(vector<vector<int>>& grid, int k) {
+        int m=size(grid),n=size(grid[0]);
+        queue<pair<int,pair<int,int>>>q;
+        // {k , {i,j}}
+        
+        q.push({k,{0,0}});
+        vector<vector<int>>availK(m,vector<int>(n,-1));
+        availK[0][0]=k;
+        
+        int dx[]={-1,0,1,0};
+        int dy[]={0,1,0,-1};
+        
+        int steps=0;
+        while(!q.empty()){
+            int s=q.size();
+            
+            while(s--){
+                auto [K,coordinates]=q.front();
+                auto [i,j]=coordinates;
+                q.pop();
+                if(i==m-1 and j==n-1) return steps;
+                for(int dir=0;dir<4;dir++){
+                    int r=i+dx[dir] , c=j+dy[dir];
+                    int nK=K;
+                    if(r<0 or r>=m or c<0 or c>=n) continue;
+                    if(grid[r][c]) nK--;
+                    if(K<0 or availK[r][c]>=nK) continue;
+                    q.push({nK,{r,c}});
+                    availK[r][c]=nK;
+                }
+                
+            }
+            steps++;
+        }
+        return -1;
+    }
+};
