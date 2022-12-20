@@ -1,0 +1,19 @@
+/* 841. Keys and Rooms
+  Link: https://leetcode.com/problems/keys-and-rooms/description/
+*/
+class Solution {
+public:
+    bool canVisitAllRooms(vector<vector<int>>& rooms) {
+        int n=rooms.size();
+        vector<bool>vis(n,false);
+        dfs(rooms,0,vis);
+        for(auto v:vis) if(!v) return v;
+        return true;
+    }
+    
+    void dfs(vector<vector<int>>& rooms , int src , vector<bool>&vis ){
+        vis[src]=true;
+        for(auto ngbr:rooms[src])
+            if(!vis[ngbr]) dfs(rooms,ngbr,vis);
+    }
+};
