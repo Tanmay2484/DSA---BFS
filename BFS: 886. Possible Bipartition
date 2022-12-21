@@ -1,0 +1,35 @@
+/* 886. Possible Bipartition
+   Link: https://leetcode.com/problems/possible-bipartition/description/
+*/
+class Solution {
+public:
+   bool possibleBipartition(int n, vector<vector<int>>& dislikes) {
+        // can be divided in 2 color components
+        vector<int>color(n+1,-1);
+        vector<vector<int>>adj(n+1);
+        for(auto &d:dislikes) 
+            adj[d[0]].push_back(d[1]) , adj[d[1]].push_back(d[0]);
+        
+        for(int i=1;i<=n;i++)
+            if(color[i]==-1 and !bfs(adj,i,color)) return false;
+        
+        return true; 
+    }
+    
+    bool bfs(vector<vector<int>>&adj , int src , vector<int>&color){
+        queue<int>q;
+        q.push(src);
+        color[src]=0;
+        while(!q.empty()){
+            int i=q.front();
+            q.pop();
+            for(auto ngbr:adj[i]){
+                if(color[ngbr]==color[i]) return false;
+                if(color[ngbr]!=-1) continue;
+                q.push(ngbr);
+                color[ngbr]=1-color[i];
+            }
+        }
+        return true;
+    }
+};
