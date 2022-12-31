@@ -1,0 +1,44 @@
+/* 980. Unique Paths III
+  Link: https://leetcode.com/problems/unique-paths-iii/description/
+*/
+class Solution {
+    using idx_t = pair<int,int>;
+    int rows_, cols_;
+    void dfs (vector<vector<int>>& grid, const idx_t dst, idx_t curr, const int targetLen, int& ans) {
+        if (grid[curr.first][curr.second]==-1) return;
+        if (curr==dst) {
+            if (targetLen==0) ans++;
+            return;
+        } 
+        grid[curr.first][curr.second] = -1;
+        if (curr.first>0 ) {
+            dfs (grid, dst, {curr.first-1, curr.second}, targetLen-1, ans);
+        } 
+        if (curr.second>0) {
+            dfs (grid, dst, {curr.first, curr.second-1}, targetLen-1, ans);
+        } 
+        if (curr.first<rows_-1) { 
+            dfs (grid, dst, {curr.first+1, curr.second}, targetLen-1, ans);
+        } 
+        if (curr.second<cols_-1) {
+            dfs (grid, dst, {curr.first, curr.second+1}, targetLen-1, ans);
+        } 
+        grid[curr.first][curr.second] = 0;
+    }
+public:
+    int uniquePathsIII(vector<vector<int>>& grid) {
+        pair<int,int> src, dst;
+        rows_ = grid.size(); cols_ = grid[0].size();
+        int targetLen = 0;
+        for (int r=0; r<rows_; r++) 
+            for (int c=0; c<cols_; c++)  {
+                if (grid[r][c]!=-1) targetLen ++;
+                if (grid[r][c] == 1) { grid[r][c] = 0; src= {r,c}; }
+                else if (grid[r][c] == 2) { grid[r][c] = 0; dst= {r,c}; }
+            }
+        pair<int,int> curr = src;
+        int ans = 0;
+        dfs(grid, dst, curr, targetLen-1, ans);
+        return ans;
+    }
+};
